@@ -4,6 +4,7 @@ var customers = [ {
 	'location' : 'San Francisco',
 	'activity' : 'coding',
 	'phone' : '123'
+		
 } ];
 
 /**
