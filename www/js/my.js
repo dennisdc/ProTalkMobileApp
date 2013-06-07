@@ -22,7 +22,6 @@ function getCustomers() {
 		cache : false,
 		type : 'GET',
 		success : function(data, status, xhr) {
-			jQuery.mobile.hidePageLoadingMsg();
 			onGetCustomers(data);
 		}
 	});
