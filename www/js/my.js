@@ -1,100 +1,26 @@
 var gatewayURL = 'http://decockict.my.phpcloud.com/protalkmobileapp';
-var customers = [ {
-	'name' : 'Static Joe',
-	'location' : 'San Francisco',
-	'activity' : 'coding',
-	'phone' : '123'
-		
-} ];
+var apiURL = 'http://protalk.wiskunde.nl/api/';
 
-/**
- * Sends GET /customers to API gateway.
- * 
- * This method is automatically generated. Don't modify it. Application logic
- * for handling the AJAX response should be placed in
- * <code>onGetCustomers</code>.
- */
-function getCustomers() {
-	// This method is automatically generated. Don't modify it.
-	jQuery.mobile.showPageLoadingMsg('Loading');
+function getLatestTalks(divid) {
+	onGetLatestTalks(dummymedia, divid);
+	//
 	$.ajax({
-		url : gatewayURL + '/customers',
+		url : apiURL + '/media/latest',
 		cache : false,
 		type : 'GET',
 		success : function(data, status, xhr) {
-			onGetCustomers(data);
+			onGetLatestTalks(data);
 		}
 	});
 }
 
-/**
- * Handle response from GET /customers
- * 
- * @param response
- * @returns
- */
-function onGetCustomers(response) {
-	customers = response;
-
-	var newCustomers = '';
-	$.each(customers, function(index, item) {
-		newCustomers += '<li data-theme="">' + '<a href="#page2?empId=' + index
-				+ '" data-transition="none">' + item.name + '</a>' + '</li>';
-	});
-	$('#customers li[role!=heading]').remove();
-	$('#customers').append(newCustomers).listview('refresh');
-}
-
-function ajaxErrorHandler(xhr, ajaxOptions, thrownError) {
-	jQuery.mobile.hidePageLoadingMsg();
-	var _this = this;
-	var msg = 'Ajax error. ';
-	if (ajaxOptions.statusText != null && ajaxOptions.statusText != '')
-		msg = msg + '<br/>' + ajaxOptions.statusText + '<br/>';
-	msg = msg + 'Trying static data!';
-	$(this).html(msg).show('slow', function() {
-		onGetCustomers(customers);
-		setTimeout(function() {
-			$(_this).hide('slow');
-		}, 1000);
-	});
-}
-
 $(document).ready(function() {
-	$('#getListBtn').bind('click', getCustomers);
-	$('#errorMessage').ajaxError(ajaxErrorHandler);
+	videowidth = $("#promovideo").width();
+	videoheight = $("#page1").height() -175;
 	jQuery.support.cors = true;
-	$('#customers li[role!=heading]').remove();
+	$('#promovideo').html('<iframe class="vine-embed" src="https://vine.co/v/bLnKj3AVlLA/embed/simple" width="'+ videowidth + '" height="' + videoheight + '" frameborder="0"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script>');
+	
 });
-
-$(document).bind(
-		'pagebeforechange',
-		function(e, data) {
-			if (typeof data.toPage === 'string') {
-				var r = data.toPage.match(/page2\?empId=(.*)/);
-				if (r) {
-					var customer = customers[r[1]];
-					if (customer) {
-						$("#customername").html(customer.name);
-						$("#customeractivity").html(
-								'Is currently ' + (customer.activity || '') + ' in:');
-						if (customer.phone) {
-							$("#customercall").attr('href', 'tel:' + customer.phone)
-									.show().trigger('enhance');
-						} else {
-							$("#customercall").hide();
-						}
-						var location = customer.location;
-						$("#locationMap").attr(
-								"src",
-								"https://maps.googleapis.com/maps/api/staticmap?center="
-										+ location
-										+ "&zoom=14&size=288x200&markers="
-										+ location + "&sensor=false");
-					}
-				}
-			}
-		});
 
 // TabBar support
 
